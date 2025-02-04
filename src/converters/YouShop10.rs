@@ -24,3 +24,45 @@ impl LinkConverter for YouShop10 {
         Ok(tab.get_url())
     }
 }
+
+// region:    --- Tests
+
+#[cfg(test)]
+mod tests {
+    type Error = Box<dyn std::error::Error>;
+    type Result<T> = core::result::Result<T, Error>; // For tests.
+
+    use super::*;
+
+    #[test]
+    fn test_detects_convertable_url() -> Result<()> {
+        // -- Setup & Fixtures
+        let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
+
+        // -- Exec
+        let actual_value = YouShop10::can_convert(&url);
+
+        // -- Check
+        assert!(actual_value);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_url_conversion() -> Result<()> {
+        // -- Setup & Fixtures
+        let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
+
+        // -- Exec
+        let actual_converted_url = YouShop10::convert(&url)?;
+
+        // -- Check
+        let expected_converted_url =
+            "https://weidian.com/item.html?p=iphone&itemID=7301608442&a=b&wfr=BuyercopyURL&distributorId=1651287329&share_relation=e0fd773efc74bec4_1651287329_1";
+        assert_eq!(actual_converted_url, expected_converted_url);
+
+        Ok(())
+    }
+}
+
+// endregion: --- Tests
