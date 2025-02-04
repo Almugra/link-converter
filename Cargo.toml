@@ -1,0 +1,8 @@
+[package]
+name = "url-trans"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+url = "2.5.4"
+headless_chrome = { version = "1.0.15", features = ["fetch"] }
