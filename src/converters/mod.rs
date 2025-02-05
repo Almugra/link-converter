@@ -1,7 +1,8 @@
 use crate::Result;
 use url::Url;
 
-pub mod YouShop10;
+pub mod mobile_taobao;
+pub mod you_shop_10;
 
 /// A trait that defines how to convert a link into its raw form
 pub trait LinkConverter {

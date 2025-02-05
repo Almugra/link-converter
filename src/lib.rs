@@ -4,7 +4,7 @@ mod converters;
 mod error;
 mod validator;
 
-use converters::{LinkConverter, YouShop10::YouShop10};
+use converters::{LinkConverter, you_shop_10::YouShop10};
 use error::Result;
 use url::Url;
 
