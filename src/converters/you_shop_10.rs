@@ -3,6 +3,7 @@ use std::time::Duration;
 use super::LinkConverter;
 use crate::Result;
 use headless_chrome::Browser;
+use lazy_regex::regex_captures;
 use url::Url;
 
 pub struct YouShop10;
@@ -21,7 +22,12 @@ impl LinkConverter for YouShop10 {
 
         tab.wait_for_element_with_custom_timeout(".into-cart", Duration::from_secs(5))?;
 
-        Ok(tab.get_url())
+        match regex_captures!(r"itemID=(\d+)", &tab.get_url()) {
+            Some((_, item_id)) if !item_id.is_empty() => {
+                Ok(format!("https://weidian.com/item.html?itemID={}", item_id))
+            }
+            _ => Err("Failed to get redirection URL".into()),
+        }
     }
 }
 
@@ -57,8 +63,7 @@ mod tests {
         let actual_converted_url = YouShop10::convert(&url)?;
 
         // -- Check
-        let expected_converted_url =
-            "https://weidian.com/item.html?p=iphone&itemID=7301608442&a=b&wfr=BuyercopyURL&distributorId=1651287329&share_relation=e0fd773efc74bec4_1651287329_1";
+        let expected_converted_url = "https://weidian.com/item.html?itemID=7301608442";
         assert_eq!(actual_converted_url, expected_converted_url);
 
         Ok(())
