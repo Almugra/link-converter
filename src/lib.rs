@@ -4,7 +4,7 @@ mod converters;
 mod error;
 
 use converters::LinkConverter;
-use error::Result;
+use error::{Error, Result};
 use once_cell::sync::Lazy;
 use url::Url;
 
@@ -17,12 +17,12 @@ static CONVERTERS: Lazy<Vec<Box<dyn LinkConverter>>> = Lazy::new(|| {
     ]
 });
 
-pub fn convert_to_raw(url: &Url) -> Result<String> {
+pub fn convert_to_raw(url: Url) -> Result<String> {
     for converter in &*CONVERTERS {
-        if converter.can_convert(url) {
+        if converter.can_convert(&url) {
             return converter.convert(url);
         }
     }
 
-    return Err("Didnt recognize convertable Link".into());
+    return Err(Error::NonConvertableUrl { given_url: url });
 }

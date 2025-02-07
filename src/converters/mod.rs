@@ -10,5 +10,5 @@ pub trait LinkConverter: Send + Sync {
     fn can_convert(&self, url: &Url) -> bool;
 
     /// Converts the URL into its raw form;
-    fn convert(&self, url: &Url) -> Result<String>;
+    fn convert(&self, url: Url) -> Result<String>;
 }
