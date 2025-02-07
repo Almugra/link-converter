@@ -14,6 +14,8 @@ pub enum Error {
 
     // -- Externals
     #[from]
+    InvalidUrl(url::ParseError),
+    #[from]
     Reqwest(reqwest::Error),
     #[from]
     HeadlessChrome(anyhow::Error),
