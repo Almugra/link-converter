@@ -4,9 +4,11 @@ mod converters;
 mod error;
 
 use converters::LinkConverter;
-use error::{Error, Result};
 use once_cell::sync::Lazy;
 use url::Url;
+
+// -- Flatten
+pub use error::{Error, Result};
 
 // endregion: --- Modules
 
