@@ -1,14 +1,14 @@
 use super::LinkConverter;
 use lazy_regex::regex_captures;
 
-struct Mtbcn;
+pub struct Mtbcn;
 
 impl LinkConverter for Mtbcn {
-    fn can_convert(url: &url::Url) -> bool {
+    fn can_convert(&self, url: &url::Url) -> bool {
         url.host_str() == Some("m.tb.cn")
     }
 
-    fn convert(url: &url::Url) -> crate::error::Result<String> {
+    fn convert(&self, url: &url::Url) -> crate::error::Result<String> {
         let resp = reqwest::blocking::get(url.to_owned())?.text()?;
 
         let Some((_, item_id, shop_id)) = regex_captures!(r"(?:itemId=(\d+))|(?:shop(\d+))", &resp)
@@ -43,7 +43,7 @@ mod tests {
         let url = Url::parse("https://m.tb.cn/h.TjKAehX?tk=Jrdnecne92w")?;
 
         // -- Exec
-        let actual_value = Mtbcn::can_convert(&url);
+        let actual_value = Mtbcn.can_convert(&url);
 
         // -- Check
         assert!(actual_value);
@@ -57,7 +57,7 @@ mod tests {
         let url = Url::parse("https://m.tb.cn/h.TjKAehX?tk=Jrdnecne92w")?;
 
         // -- Exec
-        let actual_converted_url = Mtbcn::convert(&url)?;
+        let actual_converted_url = Mtbcn.convert(&url)?;
 
         // -- Check
         let expected_converted_url = "https://www.goofish.com/item?id=713649093700";
@@ -73,7 +73,7 @@ mod tests {
         let url = Url::parse("https://m.tb.cn/h.TTHL3ZZKsh88JtB")?;
 
         // -- Exec
-        let actual_converted_url = Mtbcn::convert(&url)?;
+        let actual_converted_url = Mtbcn.convert(&url)?;
 
         // -- Check
         let expected_converted_url = "https://shop247709762.world.taobao.com/";

@@ -2,24 +2,27 @@
 
 mod converters;
 mod error;
-mod validator;
 
-use converters::{LinkConverter, you_shop_10::YouShop10};
+use converters::LinkConverter;
 use error::Result;
+use once_cell::sync::Lazy;
 use url::Url;
 
 // endregion: --- Modules
 
+static CONVERTERS: Lazy<Vec<Box<dyn LinkConverter>>> = Lazy::new(|| {
+    vec![
+        Box::new(converters::you_shop_10::YouShop10),
+        Box::new(converters::mobile_taobao::Mtbcn),
+    ]
+});
+
 pub fn convert_to_raw(url: &Url) -> Result<String> {
-    if YouShop10::can_convert(url) {
-        return YouShop10::convert(url);
+    for converter in &*CONVERTERS {
+        if converter.can_convert(url) {
+            return converter.convert(url);
+        }
     }
 
-    todo!()
-}
-
-pub fn convert_link(link: &str) -> Result<String> {
-    Url::parse(link)?;
-
-    todo!()
+    return Err("Didnt recognize convertable Link".into());
 }
