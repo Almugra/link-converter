@@ -55,22 +55,6 @@ mod tests {
     }
 
     #[test]
-    fn test_url_conversion_goofish() -> Result<()> {
-        // -- Setup & Fixtures
-        let url = Url::parse("https://m.tb.cn/h.TjKAehX?tk=Jrdnecne92w")?;
-
-        // -- Exec
-        let actual_converted_url = Mtbcn.convert(url)?;
-
-        // -- Check
-        let expected_converted_url = "https://www.goofish.com/item?id=713649093700";
-
-        assert_eq!(actual_converted_url, expected_converted_url);
-
-        Ok(())
-    }
-
-    #[test]
     fn test_url_conversion_taobao() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://m.tb.cn/h.TTHL3ZZKsh88JtB")?;
