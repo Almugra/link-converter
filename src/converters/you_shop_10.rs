@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use super::LinkConverter;
 use crate::{error::Error, Result};
-use headless_chrome::Browser;
+use headless_chrome::{Browser, LaunchOptions};
 use lazy_regex::regex_captures;
 use url::Url;
 
@@ -14,7 +14,8 @@ impl LinkConverter for YouShop10 {
     }
 
     fn convert(&self, url: Url) -> Result<String> {
-        let browser = Browser::default()?;
+        let launch_options = LaunchOptions::default();
+        let browser = Browser::new(launch_options)?;
 
         let tab = browser.new_tab()?;
 
