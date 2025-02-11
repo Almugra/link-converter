@@ -1,12 +1,18 @@
-use std::{ffi::OsStr, time::Duration};
+use std::time::Duration;
 
 use super::LinkConverter;
 use crate::{error::Error, Result};
-use headless_chrome::{Browser, LaunchOptions};
+use headless_chrome::Browser;
 use lazy_regex::regex_captures;
 use url::Url;
 
-pub struct YouShop10;
+pub struct YouShop10(Browser);
+
+impl YouShop10 {
+    pub fn new(browser: Browser) -> Self {
+        YouShop10(browser)
+    }
+}
 
 impl LinkConverter for YouShop10 {
     fn can_convert(&self, url: &Url) -> bool {
@@ -14,15 +20,7 @@ impl LinkConverter for YouShop10 {
     }
 
     fn convert(&self, url: Url) -> Result<String> {
-        let launch_options = LaunchOptions::default_builder()
-            .path(Some("/usr/bin/chromium".into()))
-            .args(vec![OsStr::new("--no-sandbox")])
-            .sandbox(false)
-            .build()
-            .unwrap();
-        let browser = Browser::new(launch_options)?;
-
-        let tab = browser.new_tab()?;
+        let tab = self.0.new_tab()?;
 
         tab.navigate_to(url.as_str())?;
 
@@ -50,9 +48,10 @@ mod tests {
     fn test_detects_convertable_url() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
+        let converter = YouShop10::new(Browser::default()?);
 
         // -- Exec
-        let actual_value = YouShop10.can_convert(&url);
+        let actual_value = converter.can_convert(&url);
 
         // -- Check
         assert!(actual_value);
@@ -64,9 +63,10 @@ mod tests {
     fn test_url_conversion() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
+        let converter = YouShop10::new(Browser::default()?);
 
         // -- Exec
-        let actual_converted_url = YouShop10.convert(url)?;
+        let actual_converted_url = converter.convert(url)?;
 
         // -- Check
         let expected_converted_url = "https://weidian.com/item.html?itemID=7301608442";

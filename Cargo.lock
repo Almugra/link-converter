@@ -1009,7 +1009,6 @@ dependencies = [
  "derive_more",
  "headless_chrome",
  "lazy-regex",
- "once_cell",
  "reqwest",
  "url",
 ]
