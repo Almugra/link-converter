@@ -28,8 +28,6 @@ async fn test_converting_bulk_convert_url() -> Result<()> {
     let converter = ConverterBuilder::default().build().unwrap();
     let conversion_res = converter.convert_bulk(text).await?;
 
-    dbg!(&conversion_res);
-
     assert!(conversion_res.succeses.len() == 1, "Should convert 1 URL");
     assert!(
         conversion_res.errors.len() == 2,
