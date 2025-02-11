@@ -14,7 +14,10 @@ impl LinkConverter for YouShop10 {
     }
 
     fn convert(&self, url: Url) -> Result<String> {
-        let launch_options = LaunchOptions::default();
+        let launch_options = LaunchOptions::default_builder()
+            .path(Some("/usr/bin/chromium".into()))
+            .build()
+            .unwrap();
         let browser = Browser::new(launch_options)?;
 
         let tab = browser.new_tab()?;
