@@ -4,7 +4,6 @@ mod converters;
 mod error;
 
 use converters::LinkConverter;
-use headless_chrome::Browser;
 use lazy_regex::regex_captures_iter;
 use reqwest::blocking::Client;
 use url::Url;
@@ -12,6 +11,7 @@ use url::Url;
 // -- Flatten
 
 pub use error::{Error, Result};
+pub use headless_chrome::{Browser, LaunchOptions};
 
 // endregion: --- Modules
 
