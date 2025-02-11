@@ -1,3 +1,4 @@
+use core::fmt;
 use std::time::Duration;
 
 use super::LinkConverter;
@@ -36,6 +37,16 @@ impl LinkConverter for YouShop10 {
         }
     }
 }
+
+// region:    --- Impl-Boilerplate
+
+impl fmt::Debug for YouShop10 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("YouShop10").finish()
+    }
+}
+
+// endregion: --- Impl-Boilerplate
 
 // region:    --- Tests
 

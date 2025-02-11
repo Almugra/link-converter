@@ -6,6 +6,7 @@ use lazy_regex::regex_captures;
 use reqwest::Client;
 use url::Url;
 
+#[derive(Debug)]
 pub struct Mtbcn(Client);
 
 impl Mtbcn {
