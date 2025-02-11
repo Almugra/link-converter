@@ -74,7 +74,9 @@ impl ConverterBuilder {
 
     pub fn build(self) -> Result<Converter> {
         let client = self.client.unwrap_or(Client::new());
-        let browser = self.browser.unwrap_or(Browser::default()?);
+        let browser = self
+            .browser
+            .unwrap_or(Browser::new(LaunchOptions::default())?);
 
         Ok(Converter {
             converters: vec![
