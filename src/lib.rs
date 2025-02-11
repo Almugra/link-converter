@@ -5,7 +5,7 @@ mod error;
 
 use converters::LinkConverter;
 use lazy_regex::regex_captures_iter;
-use reqwest::blocking::Client;
+use reqwest::Client;
 use url::Url;
 
 // -- Flatten
@@ -24,17 +24,17 @@ impl Converter {
         ConverterBuilder::default()
     }
 
-    pub fn convert_one(&self, url: Url) -> Result<String> {
+    pub async fn convert_one(&self, url: Url) -> Result<String> {
         for converter in &self.converters {
             if converter.can_convert(&url) {
-                return converter.convert(url);
+                return converter.convert(url).await;
             }
         }
 
         return Err(Error::NonConvertableUrl { given_url: url });
     }
 
-    pub fn convert_bulk(&self, text: &str) -> Result<ConversionResult> {
+    pub async fn convert_bulk(&self, text: &str) -> Result<ConversionResult> {
         let mut succeses = Vec::new();
         let mut errors = Vec::new();
 
@@ -42,7 +42,7 @@ impl Converter {
 
         for (_, [url]) in iter.map(|c| c.extract()) {
             match Url::parse(url) {
-                Ok(parsed_url) => match self.convert_one(parsed_url) {
+                Ok(parsed_url) => match self.convert_one(parsed_url).await {
                     Ok(converted) => succeses.push(converted),
                     Err(e) => errors.push((url.to_string(), e)),
                 },

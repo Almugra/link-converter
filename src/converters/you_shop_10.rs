@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use super::LinkConverter;
 use crate::{error::Error, Result};
+use async_trait::async_trait;
 use headless_chrome::Browser;
 use lazy_regex::regex_captures;
 use url::Url;
@@ -14,12 +15,13 @@ impl YouShop10 {
     }
 }
 
+#[async_trait]
 impl LinkConverter for YouShop10 {
     fn can_convert(&self, url: &Url) -> bool {
         url.host_str() == Some("k.youshop10.com")
     }
 
-    fn convert(&self, url: Url) -> Result<String> {
+    async fn convert(&self, url: Url) -> Result<String> {
         let tab = self.0.new_tab()?;
 
         tab.navigate_to(url.as_str())?;
@@ -59,14 +61,14 @@ mod tests {
         Ok(())
     }
 
-    #[test]
-    fn test_url_conversion() -> Result<()> {
+    #[tokio::test]
+    async fn test_url_conversion() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
         let converter = YouShop10::new(Browser::default()?);
 
         // -- Exec
-        let actual_converted_url = converter.convert(url)?;
+        let actual_converted_url = converter.convert(url).await?;
 
         // -- Check
         let expected_converted_url = "https://weidian.com/item.html?itemID=7301608442";

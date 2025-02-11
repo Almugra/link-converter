@@ -10,3 +10,5 @@ reqwest = { version = "0.12", features = ["json", "blocking"] }
 lazy-regex = "3.4.1"
 derive_more = { version = "2.0.1", features = ["from", "display"] }
 anyhow = "1.0.95"
+tokio = { version = "1", features = ["full"] }
+async-trait = "0.1.86"
