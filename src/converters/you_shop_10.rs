@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{ffi::OsStr, time::Duration};
 
 use super::LinkConverter;
 use crate::{error::Error, Result};
@@ -16,6 +16,7 @@ impl LinkConverter for YouShop10 {
     fn convert(&self, url: Url) -> Result<String> {
         let launch_options = LaunchOptions::default_builder()
             .path(Some("/usr/bin/chromium".into()))
+            .args(vec![OsStr::new("--no-sandbox")])
             .sandbox(false)
             .build()
             .unwrap();
