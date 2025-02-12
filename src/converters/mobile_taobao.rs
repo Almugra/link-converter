@@ -7,16 +7,16 @@ use reqwest::Client;
 use url::Url;
 
 #[derive(Debug)]
-pub struct Mtbcn(Client);
+pub struct MobileTaobao(Client);
 
-impl Mtbcn {
+impl MobileTaobao {
     pub fn new(client: Client) -> Self {
-        Mtbcn(client)
+        MobileTaobao(client)
     }
 }
 
 #[async_trait]
-impl LinkConverter for Mtbcn {
+impl LinkConverter for MobileTaobao {
     fn can_convert(&self, url: &Url) -> bool {
         url.host_str() == Some("m.tb.cn")
     }
@@ -54,7 +54,7 @@ mod tests {
     fn test_detects_convertable_url() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://m.tb.cn/h.TjKAehX?tk=Jrdnecne92w")?;
-        let converter = Mtbcn::new(Client::new());
+        let converter = MobileTaobao::new(Client::new());
 
         // -- Exec
         let actual_value = converter.can_convert(&url);
@@ -69,7 +69,7 @@ mod tests {
     async fn test_url_conversion_taobao() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://m.tb.cn/h.TTHL3ZZKsh88JtB")?;
-        let converter = Mtbcn::new(Client::new());
+        let converter = MobileTaobao::new(Client::new());
 
         // -- Exec
         let actual_converted_url = converter.convert(url).await?;

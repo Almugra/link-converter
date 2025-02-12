@@ -84,7 +84,7 @@ impl ConverterBuilder {
         Ok(Converter {
             converters: vec![
                 Box::new(converters::you_shop_10::YouShop10::new(browser)),
-                Box::new(converters::mobile_taobao::Mtbcn::new(client)),
+                Box::new(converters::mobile_taobao::MobileTaobao::new(client)),
             ],
         })
     }
