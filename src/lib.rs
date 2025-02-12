@@ -51,7 +51,10 @@ impl Converter {
             }
         }
 
-        Ok(ConversionResult { succeses, errors })
+        Ok(ConversionResult {
+            successes: succeses,
+            errors,
+        })
     }
 }
 
@@ -89,6 +92,6 @@ impl ConverterBuilder {
 
 #[derive(Debug)]
 pub struct ConversionResult {
-    pub succeses: Vec<String>,
+    pub successes: Vec<String>,
     pub errors: Vec<(String, Error)>,
 }

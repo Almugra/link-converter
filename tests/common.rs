@@ -28,7 +28,7 @@ async fn test_converting_bulk_convert_url() -> Result<()> {
     let converter = ConverterBuilder::default().build().unwrap();
     let conversion_res = converter.convert_bulk(text).await?;
 
-    assert!(conversion_res.succeses.len() == 1, "Should convert 1 URL");
+    assert!(conversion_res.successes.len() == 1, "Should convert 1 URL");
     assert!(
         conversion_res.errors.len() == 2,
         "Should fail to convert 2 URL's"
