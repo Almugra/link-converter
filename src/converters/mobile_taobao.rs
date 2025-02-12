@@ -22,7 +22,7 @@ impl LinkConverter for MobileTaobao {
     }
 
     async fn convert(&self, url: Url) -> crate::error::Result<String> {
-        let resp = self.0.get(url.to_owned()).send().await?.text().await?;
+        let resp = self.0.get(url.as_ref()).send().await?.text().await?;
 
         let Some((_, item_id, shop_id)) = regex_captures!(r"(?:itemId=(\d+))|(?:shop(\d+))", &resp)
         else {
