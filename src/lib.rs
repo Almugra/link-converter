@@ -32,7 +32,7 @@ impl Converter {
             }
         }
 
-        return Err(Error::NonConvertableUrl { given_url: url });
+        Err(Error::NonConvertableUrl { given_url: url })
     }
 
     pub async fn convert_bulk(&self, text: &str) -> Result<ConversionResult> {
