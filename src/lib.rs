@@ -17,7 +17,7 @@ pub use headless_chrome::{Browser, LaunchOptions};
 
 #[derive(Debug)]
 pub struct Converter {
-    pub converters: Vec<Box<dyn LinkConverter>>,
+    converters: Vec<Box<dyn LinkConverter>>,
 }
 
 impl Converter {
