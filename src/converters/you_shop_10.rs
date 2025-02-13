@@ -27,7 +27,7 @@ impl LinkConverter for YouShop10 {
 
         tab.navigate_to(url.as_str())?;
 
-        tab.wait_for_element_with_custom_timeout(".into-cart", Duration::from_secs(5))?;
+        tab.wait_for_element_with_custom_timeout(".into-cart", Duration::from_secs(20))?;
 
         match regex_captures!(r"itemID=(\d+)", &tab.get_url()) {
             Some((_, item_id)) if !item_id.is_empty() => {
