@@ -30,13 +30,13 @@ impl Converter {
         })
     }
 
-    pub fn from_client(client: Client) -> Result<Self> {
-        Ok(Self {
+    pub fn from_client(client: Client) -> Self {
+        Self {
             converters: vec![
                 Box::new(converters::you_shop_10::YouShop10::new(client.clone())),
                 Box::new(converters::mobile_taobao::MobileTaobao::new(client)),
             ],
-        })
+        }
     }
 
     pub async fn convert_one(&self, url: Url) -> Result<String> {
