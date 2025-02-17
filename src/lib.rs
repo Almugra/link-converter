@@ -14,12 +14,17 @@ pub use error::{Error, Result};
 
 // endregion: --- Modules
 
+/// Main Converter struct holding registered URL conversion strategies.
 #[derive(Debug)]
 pub struct Converter {
     converters: Vec<Box<dyn LinkConverter>>,
 }
 
 impl Converter {
+    /// Creates a new Converter instance with default HTTP client settings.
+    ///
+    /// # Errors
+    /// Returns `Error` if the underlying HTTP client fails to build.
     pub fn new() -> Result<Self> {
         let client = Client::builder().redirect(Policy::limited(10)).build()?;
         Ok(Self {
@@ -30,6 +35,9 @@ impl Converter {
         })
     }
 
+    /// Creates a new Converter using a pre-configured HTTP client.
+    ///
+    /// Its suggested to set a redirect Policy.
     pub fn from_client(client: Client) -> Self {
         Self {
             converters: vec![
@@ -39,6 +47,13 @@ impl Converter {
         }
     }
 
+    /// Converts a single URL using the first applicable converter.
+    ///
+    /// # Parameters
+    /// - `url`: The URL to be converted
+    ///
+    /// # Errors
+    /// Returns `Error::NonConvertableUrl` if no registered converter can handle the URL.
     pub async fn convert_one(&self, url: Url) -> Result<String> {
         for converter in &self.converters {
             if converter.can_convert(&url) {
@@ -49,6 +64,11 @@ impl Converter {
         Err(Error::NonConvertableUrl { given_url: url })
     }
 
+    /// Processes text content to find and convert all HTTP/HTTPS URLs. Returns a [`ConversionResult`].
+    ///
+    /// # Note
+    /// URL detection uses a simple regex pattern (`https?://[^\s]+`). Some valid URLs
+    /// might not be detected if they contain spaces or unusual formatting.
     pub async fn convert_bulk(&self, text: &str) -> Result<ConversionResult> {
         let mut successes = Vec::new();
         let mut errors = Vec::new();
@@ -65,15 +85,15 @@ impl Converter {
             }
         }
 
-        Ok(ConversionResult {
-            successes,
-            errors,
-        })
+        Ok(ConversionResult { successes, errors })
     }
 }
 
+/// Result container for bulk conversion operations.
 #[derive(Debug)]
 pub struct ConversionResult {
+    /// Successfully converted URLs in the order they were found
     pub successes: Vec<String>,
+    /// Conversion failures with original URL and error details
     pub errors: Vec<(String, Error)>,
 }
