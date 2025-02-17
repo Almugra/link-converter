@@ -1,18 +1,17 @@
 use core::fmt;
-use std::time::Duration;
 
 use super::LinkConverter;
 use crate::{error::Error, Result};
 use async_trait::async_trait;
-use headless_chrome::Browser;
 use lazy_regex::regex_captures;
+use reqwest::Client;
 use url::Url;
 
-pub struct YouShop10(Browser);
+pub struct YouShop10(Client);
 
 impl YouShop10 {
-    pub fn new(browser: Browser) -> Self {
-        YouShop10(browser)
+    pub fn new(client: Client) -> Self {
+        YouShop10(client)
     }
 }
 
@@ -23,13 +22,9 @@ impl LinkConverter for YouShop10 {
     }
 
     async fn convert(&self, url: Url) -> Result<String> {
-        let tab = self.0.new_tab()?;
+        let resp = self.0.get(url.as_ref()).send().await?;
 
-        tab.navigate_to(url.as_str())?;
-
-        tab.wait_for_element_with_custom_timeout(".into-cart", Duration::from_secs(20))?;
-
-        match regex_captures!(r"itemID=(\d+)", &tab.get_url()) {
+        match regex_captures!(r"itemID=(\d+)", &resp.url().as_str()) {
             Some((_, item_id)) if !item_id.is_empty() => {
                 Ok(format!("https://weidian.com/item.html?itemID={}", item_id))
             }
@@ -55,13 +50,15 @@ mod tests {
     type Error = Box<dyn std::error::Error>;
     type Result<T> = core::result::Result<T, Error>; // For tests.
 
+    use reqwest::redirect::Policy;
+
     use super::*;
 
     #[test]
     fn test_detects_convertable_url() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
-        let converter = YouShop10::new(Browser::default()?);
+        let converter = YouShop10::new(Client::builder().redirect(Policy::limited(10)).build()?);
 
         // -- Exec
         let actual_value = converter.can_convert(&url);
@@ -76,7 +73,7 @@ mod tests {
     async fn test_url_conversion() -> Result<()> {
         // -- Setup & Fixtures
         let url = Url::parse("https://k.youshop10.com/-s=uo-wD?a=b&p=iphone&wfr=BuyercopyURL&share_relation=e0fd773efc74bec4_1651287329_1")?;
-        let converter = YouShop10::new(Browser::default()?);
+        let converter = YouShop10::new(Client::builder().redirect(Policy::limited(10)).build()?);
 
         // -- Exec
         let actual_converted_url = converter.convert(url).await?;

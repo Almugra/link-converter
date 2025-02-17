@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 url = "2.5.4"
-headless_chrome = { git = "https://github.com/rust-headless-chrome/rust-headless-chrome.git" }
 reqwest = { version = "0.12", features = ["json", "blocking"] }
 lazy-regex = "3.4.1"
 derive_more = { version = "2.0.1", features = ["from", "display"] }
