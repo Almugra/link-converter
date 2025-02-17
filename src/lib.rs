@@ -50,7 +50,7 @@ impl Converter {
     }
 
     pub async fn convert_bulk(&self, text: &str) -> Result<ConversionResult> {
-        let mut succeses = Vec::new();
+        let mut successes = Vec::new();
         let mut errors = Vec::new();
 
         let iter = regex_captures_iter!(r"(https?://[^\s]+)", text);
@@ -58,7 +58,7 @@ impl Converter {
         for (_, [url]) in iter.map(|c| c.extract()) {
             match Url::parse(url) {
                 Ok(parsed_url) => match self.convert_one(parsed_url).await {
-                    Ok(converted) => succeses.push(converted),
+                    Ok(converted) => successes.push(converted),
                     Err(e) => errors.push((url.to_string(), e)),
                 },
                 Err(e) => errors.push((url.to_string(), e.into())),
@@ -66,7 +66,7 @@ impl Converter {
         }
 
         Ok(ConversionResult {
-            successes: succeses,
+            successes,
             errors,
         })
     }
