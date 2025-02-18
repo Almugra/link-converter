@@ -28,10 +28,7 @@ impl Converter {
     pub fn new() -> Result<Self> {
         let client = Client::builder().redirect(Policy::limited(10)).build()?;
         Ok(Self {
-            converters: vec![
-                Box::new(converters::you_shop_10::YouShop10::new(client.clone())),
-                Box::new(converters::mobile_taobao::MobileTaobao::new(client)),
-            ],
+            converters: Self::init_converters(client),
         })
     }
 
@@ -40,11 +37,17 @@ impl Converter {
     /// Its suggested to set a redirect Policy.
     pub fn from_client(client: Client) -> Self {
         Self {
-            converters: vec![
-                Box::new(converters::you_shop_10::YouShop10::new(client.clone())),
-                Box::new(converters::mobile_taobao::MobileTaobao::new(client)),
-            ],
+            converters: Self::init_converters(client),
         }
+    }
+
+    /// Initializes the converters
+    fn init_converters(client: Client) -> Vec<Box<dyn LinkConverter>> {
+        vec![
+            Box::new(converters::you_shop_10::YouShop10::new(client.clone())),
+            Box::new(converters::mobile_taobao::MobileTaobao::new(client)),
+            Box::new(converters::mobile_intl_taobao::MobileIntlTaobao),
+        ]
     }
 
     /// Converts a single URL using the first applicable converter.
