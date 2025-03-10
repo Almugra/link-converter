@@ -4,6 +4,7 @@ use crate::Result;
 use async_trait::async_trait;
 use url::Url;
 
+pub mod cssbuy;
 pub mod mobile_intl_taobao;
 pub mod mobile_taobao;
 pub mod you_shop_10;

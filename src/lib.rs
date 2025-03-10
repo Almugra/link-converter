@@ -45,8 +45,9 @@ impl Converter {
     fn init_converters(client: Client) -> Vec<Box<dyn LinkConverter>> {
         vec![
             Box::new(converters::you_shop_10::YouShop10::new(client.clone())),
-            Box::new(converters::mobile_taobao::MobileTaobao::new(client)),
+            Box::new(converters::mobile_taobao::MobileTaobao::new(client.clone())),
             Box::new(converters::mobile_intl_taobao::MobileIntlTaobao),
+            Box::new(converters::cssbuy::CSSBuy::new()),
         ]
     }
 
