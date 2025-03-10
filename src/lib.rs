@@ -54,6 +54,7 @@ impl Converter {
             Box::new(converters::cnfans::CnFans::new()),
             Box::new(converters::orientdig::OrientDig::new()),
             Box::new(converters::oopbuy::OopBuy::new()),
+            Box::new(converters::joyabuy::JoyaBuy::new()),
         ]
     }
 

@@ -6,6 +6,7 @@ use url::Url;
 
 pub mod cnfans;
 pub mod cssbuy;
+pub mod joyabuy;
 pub mod lovegobuy;
 pub mod mobile_intl_taobao;
 pub mod mobile_taobao;
