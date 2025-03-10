@@ -50,6 +50,7 @@ impl Converter {
             Box::new(converters::cssbuy::CSSBuy::new()),
             Box::new(converters::lovegobuy::LoveGoBuy::new()),
             Box::new(converters::mulebuy::MuleBuy::new()),
+            Box::new(converters::ootdbuy::OotdBuy::new()),
         ]
     }
 
