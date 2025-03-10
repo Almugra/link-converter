@@ -51,6 +51,7 @@ impl Converter {
             Box::new(converters::lovegobuy::LoveGoBuy::new()),
             Box::new(converters::mulebuy::MuleBuy::new()),
             Box::new(converters::ootdbuy::OotdBuy::new()),
+            Box::new(converters::cnfans::CnFans::new()),
         ]
     }
 
