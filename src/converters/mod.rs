@@ -11,6 +11,7 @@ pub mod mobile_intl_taobao;
 pub mod mobile_taobao;
 pub mod mulebuy;
 pub mod ootdbuy;
+pub mod orientdig;
 pub mod you_shop_10;
 
 #[async_trait]
