@@ -49,6 +49,7 @@ impl Converter {
             Box::new(converters::mobile_intl_taobao::MobileIntlTaobao),
             Box::new(converters::cssbuy::CSSBuy::new()),
             Box::new(converters::lovegobuy::LoveGoBuy::new()),
+            Box::new(converters::mulebuy::MuleBuy::new()),
         ]
     }
 
