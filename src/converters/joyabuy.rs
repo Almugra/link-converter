@@ -21,19 +21,19 @@ impl LinkConverter for JoyaBuy {
 
     async fn convert(&self, url: Url) -> Result<String> {
         // Extract query parameters
-        let shop_type = url.query_pairs()
+        let shop_type = url
+            .query_pairs()
             .find(|(key, _)| key == "shop_type")
             .map(|(_, value)| value.to_string());
-        
-        let id = url.query_pairs()
+
+        let id = url
+            .query_pairs()
             .find(|(key, _)| key == "id")
             .map(|(_, value)| value.to_string());
-        
+
         // Convert based on shop_type and id
         match (shop_type.as_deref(), id) {
-            (Some("taobao"), Some(id)) => {
-                Ok(format!("https://item.taobao.com/item.htm?id={}", id))
-            }
+            (Some("taobao"), Some(id)) => Ok(format!("https://item.taobao.com/item.htm?id={}", id)),
             (Some("weidian"), Some(id)) => {
                 Ok(format!("https://weidian.com/item.html?itemID={}", id))
             }
@@ -101,4 +101,4 @@ mod tests {
     }
 }
 
-// endregion: --- Tests 
+// endregion: --- Tests
