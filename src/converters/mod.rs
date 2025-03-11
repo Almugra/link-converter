@@ -26,3 +26,17 @@ pub trait LinkConverter: Send + Sync + Debug {
     /// Converts the URL into its raw form;
     async fn convert(&self, url: Url) -> Result<String>;
 }
+
+pub mod destination {
+    pub fn taobao(id: &str) -> String {
+        format!("https://item.taobao.com/item.htm?id={}", id)
+    }
+
+    pub fn weidian(id: &str) -> String {
+        format!("https://weidian.com/item.html?itemID={}", id)
+    }
+
+    pub fn ali_1688(id: &str) -> String {
+        format!("https://detail.1688.com/offer/{}.html", id)
+    }
+}

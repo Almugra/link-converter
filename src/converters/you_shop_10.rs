@@ -1,6 +1,6 @@
 use core::fmt;
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use crate::{error::Error, Result};
 use async_trait::async_trait;
 use lazy_regex::regex_captures;
@@ -25,9 +25,7 @@ impl LinkConverter for YouShop10 {
         let resp = self.0.get(url.as_ref()).send().await?;
 
         match regex_captures!(r"itemID=(\d+)", &resp.url().as_str()) {
-            Some((_, item_id)) if !item_id.is_empty() => {
-                Ok(format!("https://weidian.com/item.html?itemID={}", item_id))
-            }
+            Some((_, item_id)) if !item_id.is_empty() => Ok(destination::weidian(item_id)),
             _ => Err(Error::FailedToRedirectUrl { url }),
         }
     }

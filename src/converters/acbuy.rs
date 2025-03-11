@@ -1,6 +1,6 @@
 use crate::error::Result;
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use async_trait::async_trait;
 use url::Url;
 
@@ -33,9 +33,9 @@ impl LinkConverter for AcBuy {
 
         // Convert based on source and id
         match (source.as_deref(), id) {
-            (Some("TB"), Some(id)) => Ok(format!("https://item.taobao.com/item.htm?id={}", id)),
-            (Some("WD"), Some(id)) => Ok(format!("https://weidian.com/item.html?itemID={}", id)),
-            (Some("AL"), Some(id)) => Ok(format!("https://detail.1688.com/offer/{}.html", id)),
+            (Some("TB"), Some(id)) => Ok(destination::taobao(&id)),
+            (Some("WD"), Some(id)) => Ok(destination::weidian(&id)),
+            (Some("AL"), Some(id)) => Ok(destination::ali_1688(&id)),
             _ => Err(crate::Error::NonConvertableUrl { given_url: url }),
         }
     }

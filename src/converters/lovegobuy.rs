@@ -1,6 +1,6 @@
 use crate::error::{Error, Result};
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use async_trait::async_trait;
 use url::Url;
 
@@ -39,9 +39,9 @@ impl LinkConverter for LoveGoBuy {
 
         // Convert based on shop_type
         match shop_type.as_str() {
-            "taobao" => Ok(format!("https://item.taobao.com/item.htm?id={}", id)),
-            "weidian" => Ok(format!("https://weidian.com/item.html?itemID={}", id)),
-            "1688" => Ok(format!("https://detail.1688.com/offer/{}.html", id)),
+            "taobao" => Ok(destination::taobao(&id)),
+            "weidian" => Ok(destination::weidian(&id)),
+            "1688" => Ok(destination::ali_1688(&id)),
             _ => Err(Error::NonConvertableUrl { given_url: url }),
         }
     }

@@ -1,6 +1,6 @@
 use crate::error::Error;
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use async_trait::async_trait;
 use lazy_regex::regex_captures;
 use url::Url;
@@ -20,7 +20,7 @@ impl LinkConverter for MobileIntlTaobao {
         };
 
         if !item_id.is_empty() {
-            Ok(format!("https://item.taobao.com/item.htm?id={}", item_id))
+            Ok(destination::taobao(item_id))
         } else {
             Err(Error::FailedToRedirectUrl { url })
         }

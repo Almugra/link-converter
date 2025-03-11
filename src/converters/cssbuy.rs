@@ -1,6 +1,6 @@
 use crate::error::Result;
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use async_trait::async_trait;
 use lazy_regex::regex_captures;
 use url::Url;
@@ -25,17 +25,17 @@ impl LinkConverter for CSSBuy {
 
         // Pattern 1: item-{id}.html -> item.taobao.com/item.htm?id={id}
         if let Some((_, id)) = regex_captures!(r"^/item-(\d+)\.html$", path) {
-            return Ok(format!("https://item.taobao.com/item.htm?id={}", id));
+            return Ok(destination::taobao(id));
         }
 
         // Pattern 2: item-micro-{id}.html -> weidian.com/item.html?itemID={id}
         if let Some((_, id)) = regex_captures!(r"^/item-micro-(\d+)\.html$", path) {
-            return Ok(format!("https://weidian.com/item.html?itemID={}", id));
+            return Ok(destination::weidian(id));
         }
 
         // Pattern 3: item-1688-{id}.html -> detail.1688.com/offer/{id}.html
         if let Some((_, id)) = regex_captures!(r"^/item-1688-(\d+)\.html$", path) {
-            return Ok(format!("https://detail.1688.com/offer/{}.html", id));
+            return Ok(destination::ali_1688(id));
         }
 
         Err(crate::Error::NonConvertableUrl { given_url: url })

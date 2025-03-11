@@ -1,6 +1,6 @@
 use crate::error::Result;
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use async_trait::async_trait;
 use url::Url;
 
@@ -33,13 +33,9 @@ impl LinkConverter for OrientDig {
 
         // Convert based on shop_type and id
         match (shop_type.as_deref(), id) {
-            (Some("taobao"), Some(id)) => Ok(format!("https://item.taobao.com/item.htm?id={}", id)),
-            (Some("weidian"), Some(id)) => {
-                Ok(format!("https://weidian.com/item.html?itemID={}", id))
-            }
-            (Some("ali_1688"), Some(id)) => {
-                Ok(format!("https://detail.1688.com/offer/{}.html", id))
-            }
+            (Some("taobao"), Some(id)) => Ok(destination::taobao(&id)),
+            (Some("weidian"), Some(id)) => Ok(destination::weidian(&id)),
+            (Some("ali_1688"), Some(id)) => Ok(destination::ali_1688(&id)),
             _ => Err(crate::Error::NonConvertableUrl { given_url: url }),
         }
     }

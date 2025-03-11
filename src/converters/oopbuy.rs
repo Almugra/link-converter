@@ -1,6 +1,6 @@
 use crate::error::Result;
 
-use super::LinkConverter;
+use super::{destination, LinkConverter};
 use async_trait::async_trait;
 use url::Url;
 
@@ -33,15 +33,15 @@ impl LinkConverter for OopBuy {
             match shop_type {
                 "1" => {
                     // Taobao
-                    Ok(format!("https://item.taobao.com/item.htm?id={}", id))
+                    Ok(destination::taobao(id))
                 }
                 "weidian" => {
                     // Weidian
-                    Ok(format!("https://weidian.com/item.html?itemID={}", id))
+                    Ok(destination::weidian(id))
                 }
                 "0" => {
                     // 1688
-                    Ok(format!("https://detail.1688.com/offer/{}.html", id))
+                    Ok(destination::ali_1688(id))
                 }
                 _ => Err(crate::Error::NonConvertableUrl { given_url: url }),
             }
